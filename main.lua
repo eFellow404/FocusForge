@@ -6,8 +6,6 @@ local smallfont
 
 local currentScreen = "main"
 
-if currentScreen == "main" then 
-
     function love.load()
         love.window.setTitle("FocusForge")
 
@@ -40,7 +38,6 @@ if currentScreen == "main" then
                     text = "inch to cm" -- Second box
                 else
                     text = "Box " .. ((i - 1) * 8 + j) -- Default text for other boxes
-                    end
                 end
 
                 grid[i][j] = {
@@ -56,9 +53,6 @@ if currentScreen == "main" then
 
     function love.update(dt)
         local screenWidth, screenHeight = love.graphics.getDimensions()
-
-        if currentScreen == "hexToRGBA" then
-            
 
         -- Update small font based on screen width
         smallfont = love.graphics.newFont(screenWidth / 70)
@@ -92,7 +86,6 @@ if currentScreen == "main" then
                     end
                 end
             end
-        end
     end
 
     function love.mousepressed(x, y, button, istouch, presses)
@@ -107,7 +100,6 @@ if currentScreen == "main" then
 
                         if GridSelected[1] == 1 and GridSelected[2] == 1 then
                             currentScreen = "hexToRGBA"
-
                         elseif GridSelected[1] == 1 and GridSelected[2] == 2 then
                             print("You clicked on the second cell: inch to cm")
                         end
@@ -192,9 +184,3 @@ if currentScreen == "main" then
         love.graphics.arc(mode, x + radius, y + height - radius, radius, math.rad(-180), math.rad(-270))
         love.graphics.arc(mode, x + width - radius, y + height - radius, radius, math.rad(0), math.rad(90))
     end
-
-elseif currentScreen == "hexToRGBA" then
-    function love.draw()
-        love.graphics.clear(1, 1, 1, 1.0) -- RGBA values
-    end
-end

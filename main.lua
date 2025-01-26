@@ -1,11 +1,13 @@
--- Define the grid variable and other necessary variables at the top level
-local grid = {}
-local startx, starty, boxWidth, boxHeight
-local screenWidth, screenHeight = love.graphics.getDimensions()
-local smallfont
 
 local currentScreen = "main"
 
+function main()
+
+    -- Define the grid variable and other necessary variables at the top level
+    local grid = {}
+    local startx, starty, boxWidth, boxHeight
+    local screenWidth, screenHeight = love.graphics.getDimensions()
+    local smallfont
 
     function love.load()
         love.window.setTitle("FocusForge")
@@ -100,7 +102,7 @@ local currentScreen = "main"
                         print(GridSelected[1], GridSelected[2])
 
                         if GridSelected[1] == 1 and GridSelected[2] == 1 then
-                            currentScreen = "hexToRGBA"
+                            local currentScreen = "hexToRGBA"
                         elseif GridSelected[1] == 1 and GridSelected[2] == 2 then
                             print("You clicked on the second cell: inch to cm")
                         end
@@ -185,3 +187,16 @@ local currentScreen = "main"
         love.graphics.arc(mode, x + radius, y + height - radius, radius, math.rad(-180), math.rad(-270))
         love.graphics.arc(mode, x + width - radius, y + height - radius, radius, math.rad(0), math.rad(90))
     end
+end
+
+
+function hexToRGBA()
+    print("hexToRGBA")
+end
+
+if currentScreen == "main" then
+    main()
+
+elseif currentScreen == "hexToRGBA" then
+    hexToRGBA()
+end

@@ -6,6 +6,7 @@ local smallfont
 
 local currentScreen = "main"
 
+
     function love.load()
         love.window.setTitle("FocusForge")
 

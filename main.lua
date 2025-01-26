@@ -1,6 +1,3 @@
-
-local currentScreen = "main"
-
 function main()
 
     -- Define the grid variable and other necessary variables at the top level
@@ -102,7 +99,9 @@ function main()
                         print(GridSelected[1], GridSelected[2])
 
                         if GridSelected[1] == 1 and GridSelected[2] == 1 then
-                            local currentScreen = "hexToRGBA"
+                            hexToRGBA()
+                            return
+
                         elseif GridSelected[1] == 1 and GridSelected[2] == 2 then
                             print("You clicked on the second cell: inch to cm")
                         end
@@ -189,14 +188,37 @@ function main()
     end
 end
 
+main()
 
 function hexToRGBA()
-    print("hexToRGBA")
-end
 
-if currentScreen == "main" then
-    main()
+    local screenWidth, screenHeight = love.graphics.getDimensions()
 
-elseif currentScreen == "hexToRGBA" then
-    hexToRGBA()
+    function love.load()
+        
+        -- Enable resize window
+        love.window.setMode(screenWidth, screenHeight, {resizable = true, minwidth = 1200, minheight = 800})
+
+        -- Load logo
+        logo = love.graphics.newImage("img/logo.png")
+
+    end
+
+    function love.draw()
+        
+        --set background to dark grey
+        love.graphics.clear(0.2, 0.2, 0.2, 1.0)
+
+        -- Ensure logo is loaded before drawing
+        if logo then
+            -- Define scaling for the logo
+            local logoscaleX = 0.1
+            local logoscaleY = 0.1
+
+            -- Draw the logo at the top right (scaled)
+            love.graphics.draw(logo, 10, 10, 0, logoscaleX, logoscaleY)
+        else
+            print("Logo not loaded")
+        end
+    end
 end

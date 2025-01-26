@@ -102,6 +102,7 @@ if currentScreen == "main" then
 
                         if GridSelected[1] == 1 and GridSelected[2] == 1 then
                             currentScreen = "hexToRGBA"
+
                         elseif GridSelected[1] == 1 and GridSelected[2] == 2 then
                             print("You clicked on the second cell: inch to cm")
                         end

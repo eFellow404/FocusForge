@@ -1,3 +1,5 @@
+local utf8 = require("utf8") -- Load the utf8 library
+
 function main()
 
     -- Define the grid variable and other necessary variables at the top level
@@ -10,7 +12,7 @@ function main()
         love.window.setTitle("FocusForge")
 
         -- Enable resize window
-        love.window.setMode(screenWidth, screenHeight, {resizable = true, minwidth = 1200, minheight = 800})
+        love.window.setMode(screenWidth, screenHeight, {resizable = false, minwidth = 1200, minheight = 800})
 
         -- Load logo
         logo = love.graphics.newImage("img/logo.png")
@@ -175,17 +177,6 @@ function main()
             end
         end
     end
-
-    -- Define the round_rectangle function
-    function round_rectangle(mode, x, y, width, height, radius)
-        radius = radius or 10
-        love.graphics.rectangle(mode, x + radius, y, width - (radius * 2), height)
-        love.graphics.rectangle(mode, x, y + radius, width, height - (radius * 2))
-        love.graphics.arc(mode, x + radius, y + radius, radius, math.rad(-180), math.rad(-90))
-        love.graphics.arc(mode, x + width - radius, y + radius, radius, math.rad(-90), math.rad(0))
-        love.graphics.arc(mode, x + radius, y + height - radius, radius, math.rad(-180), math.rad(-270))
-        love.graphics.arc(mode, x + width - radius, y + height - radius, radius, math.rad(0), math.rad(90))
-    end
 end
 
 main()
@@ -194,20 +185,58 @@ function hexToRGBA()
 
     local screenWidth, screenHeight = love.graphics.getDimensions()
 
+    local HexBox = {
+        x = (love.graphics.getWidth() - 600) / 2,
+        y = 10,
+        width = 600,
+        height = 100,
+        hasFocus = false
+    }
+
+    local boxText = ""
+
     function love.load()
+
+        -- Enable key repeat for continuous typing
+        love.keyboard.setKeyRepeat(true) 
         
         -- Enable resize window
-        love.window.setMode(screenWidth, screenHeight, {resizable = true, minwidth = 1200, minheight = 800})
+        love.window.setMode(screenWidth, screenHeight, {resizable = false, minwidth = 1200, minheight = 800})
 
         -- Load logo
         logo = love.graphics.newImage("img/logo.png")
 
+        --load font
+        font = love.graphics.newFont(2)
+
+    end
+
+    function love.update(dt)
+
+        if #boxText > 6 then
+            boxText = string.sub(boxText, 1, 6)
+        end
+
+        local convertedcode = boxText
+        print(convertedcode)
+
     end
 
     function love.draw()
-        
+
+        local HexBox = {
+            x = (love.graphics.getWidth() - 600) / 2,
+            y = 10,
+            width = 600,
+            height = 100,
+            text = boxText
+        }
+              
         --set background to dark grey
         love.graphics.clear(0.2, 0.2, 0.2, 1.0)
+
+        love.graphics.setColor(0.5, 0, 1) -- Set color to purple
+        love.graphics.rectangle("fill", HexBox.x, HexBox.y, HexBox.width, HexBox.height, 20)
 
         -- Ensure logo is loaded before drawing
         if logo then
@@ -216,9 +245,71 @@ function hexToRGBA()
             local logoscaleY = 0.1
 
             -- Draw the logo at the top right (scaled)
+            love.graphics.setColor(1, 1, 1, 1) --make logo not funky 
             love.graphics.draw(logo, 10, 10, 0, logoscaleX, logoscaleY)
         else
             print("Logo not loaded")
         end
+
+        -- Draw the text
+        love.graphics.setColor(0, 0, 0) -- Black text
+        love.graphics.setFont(font)
+        love.graphics.print("#" .. HexBox.text, HexBox.x + 15, HexBox.y - 10)
     end
+
+    function love.mousepressed(x, y, button, istouch, presses)
+
+        --click left mouse on logo to go back to main
+        if button == 1 then
+            local logoX, logoY = 10, 10
+            local logoWidth = logo:getWidth() * 0.1
+            local logoHeight = logo:getHeight() * 0.1
+
+            if x >= logoX and x <= logoX + logoWidth and y >= logoY and y <= logoY + logoHeight then
+            main()
+            elseif x >= HexBox.x and x <= HexBox.x + HexBox.width and
+               y >= HexBox.y and y <= HexBox.y + HexBox.height then
+                HexBox.hasFocus = true
+                print("HexBox has focus")
+            else
+                HexBox.hasFocus = false
+                print("HexBox does not have focus")
+            end
+        end
+    end
+
+
+
+    function love.keypressed(key)
+        if HexBox.hasFocus then
+            if key == "backspace" then
+                -- Remove the last character
+                local byteoffset = utf8.offset(boxText, -1)
+                if byteoffset then
+                    boxText = string.sub(boxText, 1, byteoffset - 1)
+                end
+            elseif key == "return" then
+                -- Handle Enter key (e.g., submit or confirm the text)
+                print("Input Text: " .. boxText)
+                HexBox.isActive = false -- Deactivate after submission
+            end
+        end
+    end
+
+    function love.textinput(t)
+        if HexBox.hasFocus then
+            boxText = boxText .. t -- Append typed characters
+        end
+    end
+    
+end
+
+function round_rectangle(mode, x, y, width, height, radius)
+    radius = radius or 10
+    love.graphics.rectangle(mode, x + radius, y, width - (radius * 2), height)
+    love.graphics.rectangle(mode, x, y + radius, width, height - (radius * 2))
+    love.graphics.arc(mode, x + radius, y + radius, radius, math.rad(-180), math.rad(-90))
+    love.graphics.arc(mode, x + width - radius, y + radius, radius, math.rad(-90), math.rad(0))
+    love.graphics.arc(mode, x + radius, y + height - radius, radius, math.rad(-180), math.rad(-270))
+    love.graphics.arc(mode, x + width - radius, y + height - radius, radius, math.rad(0), math.rad(90))
 end

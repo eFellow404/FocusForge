@@ -40,6 +40,7 @@ if currentScreen == "main" then
                     text = "inch to cm" -- Second box
                 else
                     text = "Box " .. ((i - 1) * 8 + j) -- Default text for other boxes
+                    end
                 end
 
                 grid[i][j] = {
@@ -56,35 +57,39 @@ if currentScreen == "main" then
     function love.update(dt)
         local screenWidth, screenHeight = love.graphics.getDimensions()
 
+        if currentScreen == "hexToRGBA" then
+            
+
         -- Update small font based on screen width
         smallfont = love.graphics.newFont(screenWidth / 70)
 
-        if screenWidth ~= nil and screenHeight ~= nil then
-            boxWidth = ((math.min(screenWidth, screenHeight) * 3) - 300) / 16
-            boxHeight = boxWidth / 2 -- Make each box half as tall as it is wide
-            startx = (screenWidth - 8 * boxWidth) / 2
-            starty = ((screenHeight - 8 * boxHeight) + 50) / 2
+            if screenWidth ~= nil and screenHeight ~= nil then
+                boxWidth = ((math.min(screenWidth, screenHeight) * 3) - 300) / 16
+                boxHeight = boxWidth / 2 -- Make each box half as tall as it is wide
+                startx = (screenWidth - 8 * boxWidth) / 2
+                starty = ((screenHeight - 8 * boxHeight) + 50) / 2
 
-            -- Create 8x8 grid
-            for i = 1, 8 do
-                grid[i] = {}
-                for j = 1, 8 do
-                    local text = ""
-                    if i == 1 and j == 1 then
-                        text = "hex to rgba" -- First box
-                    elseif i == 1 and j == 2 then
-                        text = "inch to cm" -- Second box
-                    else
-                        text = "Box " .. ((i - 1) * 8 + j) -- Default text for other boxes
+                -- Create 8x8 grid
+                for i = 1, 8 do
+                    grid[i] = {}
+                    for j = 1, 8 do
+                        local text = ""
+                        if i == 1 and j == 1 then
+                            text = "hex to rgba" -- First box
+                        elseif i == 1 and j == 2 then
+                            text = "inch to cm" -- Second box
+                        else
+                            text = "Box " .. ((i - 1) * 8 + j) -- Default text for other boxes
+                        end
+
+                        grid[i][j] = {
+                            x = startx + (j - 1) * boxWidth,
+                            y = starty + (i - 1) * boxHeight,
+                            width = boxWidth,
+                            height = boxHeight,
+                            text = text
+                        }
                     end
-
-                    grid[i][j] = {
-                        x = startx + (j - 1) * boxWidth,
-                        y = starty + (i - 1) * boxHeight,
-                        width = boxWidth,
-                        height = boxHeight,
-                        text = text
-                    }
                 end
             end
         end
@@ -189,6 +194,7 @@ if currentScreen == "main" then
     end
 
 elseif currentScreen == "hexToRGBA" then
-
-    love.graphics.clear(1, 1, 1, 1.0) -- RGBA values
+    function love.draw()
+        love.graphics.clear(1, 1, 1, 1.0) -- RGBA values
+    end
 end

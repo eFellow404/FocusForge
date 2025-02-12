@@ -226,7 +226,15 @@ function hexToRGBA()
 
         local HexBox = {
             x = (love.graphics.getWidth() - 600) / 2,
-            y = 10,
+            y = 210,
+            width = 600,
+            height = 100,
+            text = boxText
+        }
+
+        local rgbabox = {
+            x = (love.graphics.getWidth() - 600) / 2,
+            y = 490,
             width = 600,
             height = 100,
             text = boxText
@@ -237,6 +245,8 @@ function hexToRGBA()
 
         love.graphics.setColor(0.5, 0, 1) -- Set color to purple
         love.graphics.rectangle("fill", HexBox.x, HexBox.y, HexBox.width, HexBox.height, 20)
+
+        love.graphics.rectangle("fill", rgbabox.x, rgbabox.y, rgbabox.width, rgbabox.height, 20)
 
         -- Ensure logo is loaded before drawing
         if logo then
